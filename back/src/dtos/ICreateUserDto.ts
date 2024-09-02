@@ -1,8 +1,8 @@
-export interface IUser {
-    id: number,
+export interface ICreateUserDto {
     name: string,
     email: string,
     birthdate: string,
     nDni: number,
-    credentialsId: number
+    username: string,
+    password: string
 };

@@ -1,4 +1,5 @@
-import server from "./server"
+import "reflect-metadata";
+import server from "./server";
 import { PORT } from "./config/envs";
 
 server.listen(PORT, () => {

@@ -1,4 +1,4 @@
-import { IAppointmentDto } from "../dto/AppointmentDto";
+import { IAppointmentDto } from "../dtos/AppointmentDto";
 import { IAppointment } from "../interfaces/IAppointments";
 
 let appointments: IAppointment[] = [];

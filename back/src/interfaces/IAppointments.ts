@@ -1,6 +1,8 @@
 export interface IAppointment {
     id: number,
-    date: DateConstructor,
-    user: string,
-    doctor: string
+    date: string,
+    time: string,
+    userId: number,
+    status: "active" | "cancelled",
+    description: string
 };
