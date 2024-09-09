@@ -1,30 +1,22 @@
-import { error } from "console";
+import { credentialModel } from "../config/appDataSource";
 import { ICredentialDto } from "../dtos/ICredentialDto";
-import { ICredential } from "../interfaces/ICredential";
+import { Credential } from "../entities/Credentials";
 
-const credentials: ICredential[] = [];
-let credentialID: number = 1;
+export const createCredential = async (credentialDTO: ICredentialDto): Promise<Credential> => {
+    const newCredential: Credential = await credentialModel.create(credentialDTO)
+    await credentialModel.save(newCredential);
 
-export const createCredential = async (credentialDTO: ICredentialDto): Promise<number> => {
-    const newCredential: ICredential = {
-        id: credentialID++,
-        username: credentialDTO.username,
-        password: credentialDTO.password
-    }
-    credentials.push(newCredential);
-    return newCredential.id;
+    return newCredential;
 };
 
-export const validateCredential = async (credentialDTO: ICredentialDto): Promise<number> => {
-    const foundCredential = credentials.find(
-        (credential) => credential.username === credentialDTO.username
-    )
+export const validateCredential = async (credentialDTO: ICredentialDto): Promise<Credential> => {
+    const credential: Credential | null = await credentialModel.findOneBy({username: credentialDTO.username});
 
-    if (!foundCredential) {
+    if (!credential) {
         throw Error("Username doesn't exist.");
-    } else if(foundCredential && foundCredential.password !== credentialDTO.password) {
+    } else if(credential && credential.password !== credentialDTO.password) {
         throw Error("Password doesn't match.");
     } else {
-        return foundCredential.id;
-    }
+        return credential;
+    };
 };

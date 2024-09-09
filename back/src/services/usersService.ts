@@ -1,42 +1,37 @@
-import { ICreateUserDto } from "../dtos/ICreateUserDTO";
+import { userModel } from "../config/appDataSource";
+import { ICreateUserDto } from "../dtos/ICreateUserDto";
+import { Credential } from "../entities/Credentials";
+import { User } from "../entities/Users";
 import { IUser } from "../interfaces/IUsers";
 import { createCredential } from "./credentialService";
 
 let users: IUser[] = [];
 
-let userID: number = 1;
 
-
-export const getUsersService = async (): Promise<IUser[]> => {
-    const allUsers: IUser[] = users;
+export const getUsersService = async (): Promise<User[]> => {
+    const allUsers: User[] = await userModel.find();
     return allUsers;
 };
 
 
-export const getUsersByIDService = async (id: number): Promise<IUser> => {
-    const foundUser: IUser | undefined = users.find(user => user.id === id);
+export const getUsersByIDService = async (id: number): Promise<User> => {
+    const foundUser: User | undefined = await userModel.findOne({ where: {id}, relations: ['appointments'] });
     if (!foundUser) throw Error("User not found.");
     return foundUser;
 };
 
 
-export const createUsersService = async (createUserDto: ICreateUserDto) => {
-    const newCredentialID: number = await createCredential({
+export const createUsersService = async (createUserDto: ICreateUserDto): Promise<User> => {
+    const newUser: User = await userModel.create(createUserDto);
+    await userModel.save(newUser);
+    const newCredential: Credential = await createCredential({
         username: createUserDto.username,
         password: createUserDto.password
     });
 
-    const newUser: IUser = {
-        id: userID++,
-        name: createUserDto.name,
-        email: createUserDto.email,
-        birthdate: createUserDto.birthdate,
-        nDni: createUserDto.nDni,
-        credentialsId: newCredentialID
-        
-    }
+    newUser.credential = newCredential;
+    userModel.save(newUser);
 
-    users.push(newUser);
     return newUser;
 };
 
