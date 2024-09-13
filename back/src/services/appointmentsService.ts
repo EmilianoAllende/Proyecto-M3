@@ -1,29 +1,39 @@
-import { IAppointmentDto } from "../dtos/AppointmentDto";
-import { IAppointment } from "../interfaces/IAppointments";
+import { appointmentModel, userModel } from "../config/appDataSource";
+import { IScheduleAppointmentDto } from "../dtos/IScheduleAppointmentDto";
+import { Appointment } from "../entities/Appointments";
+import { User } from "../entities/Users";
 
-let appointments: IAppointment[] = [];
 
 let id: number = 1;
 
-export const createAppointmentsService = async (appointmentData: IAppointmentDto): Promise<IAppointment> => {
-    const newAppointment: IAppointment = {
-        id,
-        date: appointmentData.date,
-        user: appointmentData.user,
-        doctor: appointmentData.doctor
-    };
+export const getAppointmentsService = async (): Promise<Appointment[]> => {
+    const allAppointments: Appointment[] = await appointmentModel.find();
+    return allAppointments;
+};
 
-    appointments.push(newAppointment);
-    id++;
+export const getAppointmentByIDService = async (appointmentId: number): Promise<Appointment> => {
+    const foundAppointment: Appointment | null = await appointmentModel.findOneBy({id: appointmentId});
+    if (!foundAppointment) throw Error("Appointment not found.");
+    return foundAppointment;
+};
+
+export const scheduleAppointmentService = async (scheduleAppointmentDTO: IScheduleAppointmentDto): Promise<Appointment> => {
+    const newAppointment: Appointment = await appointmentModel.create(scheduleAppointmentDTO);
+    await appointmentModel.save(newAppointment);
+    const user: User | null = await userModel.findOneBy({id: scheduleAppointmentDTO.userId});
+
+    if(!user) throw Error("User doesn't exist.");
+    newAppointment.user = user;
+
+    await appointmentModel.save(newAppointment);
+
     return newAppointment;
 };
 
-export const getAppointmentsService = async (): Promise<IAppointment[]> => {
-    return appointments;
-};
-
-export const deleteAppointmentsService = async (id: number): Promise<void> => {
-    appointments = appointments.filter((appointment: IAppointment) => {
-        return appointment.id !== id;
-    });
+export const deleteAppointmentsService = async (appointmentId: number): Promise<Appointment> => {
+    const appointment: Appointment | null = await appointmentModel.findOneBy({id: appointmentId});
+    if (!appointment) throw Error("Appointment doesn't exist.");
+    appointment.status = "canceled";
+    await appointmentModel.save(appointment);
+    return appointment;
 };

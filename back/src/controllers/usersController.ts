@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createUsersService, getUsersService, deleteUsersService, getUsersByIDService } from "../services/usersService";
+import { createUserService, getUsersService, deleteUserService, getUsersByIDService } from "../services/usersService";
 import { ICreateUserDto } from "../dtos/ICreateUserDto";
 import { validateCredential } from "../services/credentialService";
 import { User } from "../entities/Users";
@@ -31,7 +31,7 @@ export const getUserByID = async (req: Request, res: Response) => {
 export const register = async (req: Request, res: Response)=> {
     try {
         const { name, email, birthdate, username, password, nDni }: ICreateUserDto = req.body;
-        const newUser: User = await createUsersService({ name, email, birthdate, username, password, nDni });
+        const newUser: User = await createUserService({ name, email, birthdate, username, password, nDni });
         res.status(200).json(newUser);
 
     } catch (error: any) {
@@ -53,6 +53,6 @@ export const login = async (req: Request, res: Response)=> {
 
 export const deleteUsers = async (req: Request, res: Response)=> {
     const { id } = req.body;
-    await deleteUsersService(id);
+    await deleteUserService(id);
     res.status(200).json({message: "User succesfully deleted."});
 };
