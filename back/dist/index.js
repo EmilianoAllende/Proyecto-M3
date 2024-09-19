@@ -1,6 +1,9 @@
 "use strict";
-const express = require("express");
-const server = express();
-server.listen(3000, () => {
-    console.log("Server listening on port 3000.");
-});
+"user strict";
+const num1 = 5;
+const num2 = 10;
+const algo = "algo";
+
+// const sumar = (a:Number, b:Number) => a + b;
+// console.log(sumar(num1, num2));
+//  sumar(),

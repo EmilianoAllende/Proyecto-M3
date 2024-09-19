@@ -1,30 +1,27 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
-import { User } from "./Users"
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+import { StatusEnum } from "../enums/StatusEnum";
+import { User } from "./User";
 
 @Entity({
-    name: "appointments"
+  name: "appointments",
 })
 export class Appointment {
-    @PrimaryGeneratedColumn()
-    id: number
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column("date")
-    date: string
+  @Column({ type: "date" })
+  date: Date;
 
-    @Column("time")
-    time: string
+  @Column()
+  time: string;
 
-    @Column()
-    userId: number
+  @Column({
+    type: "enum",
+    enum: StatusEnum,
+    default: StatusEnum.ACTIVE,
+  })
+  status: StatusEnum;
 
-    @Column({
-        default: "active"
-    })
-    status: string
-
-    @Column()
-    description: string
-
-    @ManyToOne(() => User, (user) => user.appointments)
-    user: User
-};
+  @ManyToOne(() => User, (user) => user.appointments)
+  user: User;
+}

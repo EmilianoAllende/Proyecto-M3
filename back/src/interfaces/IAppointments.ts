@@ -1,8 +1,11 @@
-export interface IAppointment {
-    id: number,
-    date: string,
-    time: string,
-    userId: number,
-    status: "active" | "cancelled",
-    description: string
-};
+import { StatusEnum } from "../enums/StatusEnum";
+
+interface IAppointments {
+  id: number;
+  date: Date;
+  time: string;
+  userId: number;
+  status: StatusEnum;
+}
+
+export default IAppointments;

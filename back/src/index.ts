@@ -1,20 +1,13 @@
-import "reflect-metadata";
 import server from "./server";
 import { PORT } from "./config/envs";
-import { AppDataSource } from "./config/appDataSource";
-import { preloadData } from "./helpers/preloadData";
+import { initializeDataSource } from "./config/data.source";
+const port = PORT ? PORT : 3001;
 
-
-    AppDataSource.initialize()
-    .then(() => {
-        console.log("Data Source has been initialized!")
-        preloadData()
-            .then(res => {
-                server.listen(PORT, () => {
-                    console.log(`Server listening on port ${PORT}`);
-            });
-        });
-    })
-    .catch((err) => {
-        console.error("Error during Data Source initialization", err);
-    });
+try {
+  initializeDataSource();
+  server.listen(PORT, () => {
+    console.log(`Server listen on port ${port}`);
+  });
+} catch (error) {
+  console.error("Error de servidor");
+}

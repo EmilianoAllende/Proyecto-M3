@@ -1,11 +1,13 @@
 import express from "express";
-import router from "./routes/usersRouter";
-import appointmentRouter from "./routes/appointmentsRouter";
-
+import routes from "./routes";
+import "reflect-metadata";
+import morgan from "morgan";
+import cors from "cors";
 const server = express();
 
 server.use(express.json());
-server.use(router);
-server.use(appointmentRouter);
+server.use(morgan("dev"));
+server.use(cors());
+server.use(routes);
 
 export default server;
