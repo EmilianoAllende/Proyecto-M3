@@ -11,7 +11,6 @@ const Box = styled.div`
 
   button {
     ${commonStyles}
-   
   }
 `;
 

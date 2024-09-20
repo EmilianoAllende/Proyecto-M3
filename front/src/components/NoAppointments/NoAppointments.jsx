@@ -1,8 +1,8 @@
 
 const NoAppointments = () => {
   return (
-    <div style={{width: '50%', marginLeft: '25%'}}>
-      <p style={{marginLeft: '10%'}}>No hay turnos disponibles</p>
+    <div>
+      <p style={{color: "red", fontSize: "xx-large", textAlign: "center"}}>No hay turnos disponibles</p>
     </div>
   );
 };
